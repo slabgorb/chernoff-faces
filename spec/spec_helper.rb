@@ -1,2 +1,3 @@
-require 'lib/chernoff-faces/chernoff-faces'
+require '../lib/chernoff-faces.rb'
+
 
