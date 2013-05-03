@@ -83,7 +83,10 @@ module ChernoffFaces
     # Draw the feature
     #
     def draw
+    end
 
+    def output
+      @svg.output
     end
   end
 
@@ -92,8 +95,16 @@ module ChernoffFaces
   #
   class Nose < Feature
     def draw
-      @svg.line(50, 35, 50, @values.first)
-      @svg.line(40, @values.first, 50, @values.first)
+      center = 50
+      top = 10
+      bottom = top + @values.first * 3
+      line_length = @values.first
+      # eyebrow
+      @svg.line(center - line_length, top, center + 5, top)
+      # nose height
+      @svg.line(center + 5, top, center, bottom)
+      # nose bottom
+      @svg.line(center + line_length, bottom, center, bottom)
       super
     end
   end
@@ -103,8 +114,8 @@ module ChernoffFaces
   #
   class Eyes < Feature
     def draw
-      @svg.circle(25, 25, @values.first)
-      @svg.circle(75, 25, @values.first)
+      @svg.circle(30, 20, @values.first)
+      @svg.circle(70, 20, @values.first)
       super
     end
   end
