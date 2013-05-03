@@ -128,7 +128,10 @@ module ChernoffFaces
     def draw
       spot = 60
       center = 50
-      @svg.polyline(center - @values.first, spot + @values.first, center, spot, center + @values.first, spot + @values.first )
+      value = @values.first * 2
+      @svg.with_style :fill=>"white", :stroke=>"black" do
+        polyline(center - value, spot - (value / 2), center, spot, center + value, spot + value)
+      end
       super
     end
   end

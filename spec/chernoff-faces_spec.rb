@@ -24,11 +24,13 @@ module ChernoffFaces
     context 'edge cases' do
       it 'handles extreme cases' do
         ugly = Face.new({ eyes: 0, nose: 0, mouth: 0, ears: 0})
+        ugly.save('tmp/ugly.svg').should be_true
       end
     end
 
     it 'outputs svg directly' do
-      @face.draw.output.should match(/cx="30" cy="20" r="3"/)
+      doc = Nokogiri::parse(@face.output)
+      doc.children.children[1].attributes.values.map(&:value).should eq ["30", "20", "3", "stroke:black;"]
     end
 
     after :all do
