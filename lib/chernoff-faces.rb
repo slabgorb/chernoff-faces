@@ -16,26 +16,56 @@ module ChernoffFaces
   class Face
     attr_reader :features
 
-    def initialize(width = 100, height = 100, filename = 'outfile.svg', keyvalues)
+    def initialize(width = 100, height = 100, filepath = 'tmp/outfile.svg', keyvalues)
       @svg = Rasem::SVGImage.new(width, height)
       @features = { }
       keyvalues.each do |key, values|
-        klass = case key
-                when :eyes then Eyes
-                when :ears then Ears
-                when :mouth then Mouth
-        end
-        @features[key] = klass.new(@svg, *values)
+        self[key] = values
       end
     end
 
+    ##
+    # Saves the image to file
+    #
     def save(filename)
+      @svg.close
+      begin
+        File.open(File.expand_path(filename), 'w') { |f| f << @svg.output }
+      rescue Exception => e
+        puts e.message
+        return false
+      end
+      true
+    end
 
+    ##
+    # Set or override one of the facial features
+    #
+    def []=(key, *values)
+      @features[key] = constantize(key).new(@svg, *values)
     end
 
     def draw
-      @features.each{ |f| f.draw }
+      @features.each{ |k,f| f.draw }
+      self
     end
+
+    def output
+      @svg.output
+    end
+
+
+    private
+    def constantize(key)
+      klass = case key
+              when :eyes then Eyes
+              when :ears then Ears
+              when :mouth then Mouth
+              when :nose then Nose
+              end
+    end
+
+
 
   end
   ##
@@ -74,7 +104,7 @@ module ChernoffFaces
   class Eyes < Feature
     def draw
       @svg.circle(25, 25, @values.first)
-      @svg.circle(25, 75, @values.first)
+      @svg.circle(75, 25, @values.first)
       super
     end
   end
