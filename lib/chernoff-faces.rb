@@ -1,30 +1,46 @@
-
+require 'rasem'
+class String
+  def constantize
+    Object.const_get(self)
+  end
+end
 ##
 #  Creates chernoff face graphs in SVG.
 #
 module ChernoffFaces
 
+  ##
+  # Draw a face
+  #
   class Face
-    ##
-    # Draw a face
-    #
+    attr_reader :features
+
     def initialize(width, height, keyvalues)
-      @svg = Rasem::SVGImage.new(width, height)
+      @svg_image = Rasem::SVGImage.new(width, height)
       @features = { }
-      key.each do |key, values|
-        klass = key.to_s.capitalize.constantize
-        klass.new(*values)
+      keyvalues.each do |key, values|
+        klass = case key
+                when :eyes then Eyes
+                when :ears then Ears
+                when :mouth then Mouth
+        end
+        @features[key] = klass.new(@svg_image, *values)
       end
     end
-  end
 
+    def draw
+      @features.each(&:draw)
+    end
+
+  end
   ##
   # Features express values on size or shape
   # TODO: color? line thickness?
   #
   class Feature
-    def initialize(*values)
+    def initialize(svg_image, *values)
       @values = values
+      @svg = svg_image
     end
 
     ##
@@ -40,6 +56,7 @@ module ChernoffFaces
   #
   class Eyes < Feature
     def draw(*values)
+
       super
     end
   end
@@ -70,5 +87,7 @@ module ChernoffFaces
       super
     end
   end
+
+
 
 end
