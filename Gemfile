@@ -12,6 +12,7 @@ group :development do
 end
 
 group :test do
+  gem 'nokogiri'
   gem "rspec"
   gem 'growl'
   gem 'listen'

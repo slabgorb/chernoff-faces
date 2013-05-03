@@ -37,6 +37,7 @@ GEM
       rb-kqueue (>= 0.2)
     lumberjack (1.0.3)
     method_source (0.8.1)
+    nokogiri (1.5.9)
     pry (0.9.12.1)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -74,5 +75,6 @@ DEPENDENCIES
   guard-spork
   jeweler (~> 1.8.4)
   listen
+  nokogiri
   rasem (= 0.6.1)
   rspec
