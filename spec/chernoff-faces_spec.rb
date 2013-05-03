@@ -33,11 +33,11 @@ module ChernoffFaces
 
     before :each do
       @face = Face.new({ eyes: 3, nose: 10 })
+      @face.draw
     end
 
     it 'draws features' do
       feature =  @face.features[:eyes]
-      feature.draw
       # one eye
       feature.svg.output.should match(/cx="25" cy="25" r="3"/)
     end

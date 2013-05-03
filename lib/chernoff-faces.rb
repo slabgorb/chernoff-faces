@@ -20,7 +20,7 @@ module ChernoffFaces
       @svg = Rasem::SVGImage.new(width, height)
       @features = { }
       keyvalues.each do |key, values|
-        self[key] = values
+        @features[key] = constantize(key).new(@svg, *values)
       end
     end
 
@@ -93,7 +93,7 @@ module ChernoffFaces
   class Nose < Feature
     def draw
       @svg.line(50, 35, 50, @values.first)
-      @svg.circle(40, @values.first, 50, @values.first)
+      @svg.line(40, @values.first, 50, @values.first)
       super
     end
   end
