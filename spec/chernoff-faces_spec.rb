@@ -4,7 +4,7 @@ module ChernoffFaces
 
   describe Face do
     before :all do
-      @face = Face.new(100,100, { eyes: -3, mouth: 10 })
+      @face = Face.new({ eyes: 3, mouth: 10 })
     end
     it 'creates features' do
       @face.features.map(&:last).map(&:class).should eq([ChernoffFaces::Eyes, ChernoffFaces::Mouth])
@@ -14,11 +14,14 @@ module ChernoffFaces
   end
 
   describe Feature do
-    before :all do
-      @face = Face.new(100,100, { eyes: -3, mouth: 10 })
+    before :each do
+      @face = Face.new({ eyes: 3, mouth: 10 })
     end
     it 'draws features' do
-      @face.features.first.last.draw.should eq(nil)
+      feature =  @face.features[:eyes]
+      feature.draw
+      feature.svg.output.should match(/cx="25" cy="25" r="3"/)
+      feature.svg.output.should match(/cx="25" cy="75" r="3"/)
     end
   end
 

@@ -11,12 +11,13 @@ module ChernoffFaces
 
   ##
   # Draw a face
+  # TODO: handle negative values by normalizing
   #
   class Face
     attr_reader :features
 
-    def initialize(width, height, keyvalues)
-      @svg_image = Rasem::SVGImage.new(width, height)
+    def initialize(width = 100, height = 100, filename = 'outfile.svg', keyvalues)
+      @svg = Rasem::SVGImage.new(width, height)
       @features = { }
       keyvalues.each do |key, values|
         klass = case key
@@ -24,12 +25,16 @@ module ChernoffFaces
                 when :ears then Ears
                 when :mouth then Mouth
         end
-        @features[key] = klass.new(@svg_image, *values)
+        @features[key] = klass.new(@svg, *values)
       end
     end
 
+    def save(filename)
+
+    end
+
     def draw
-      @features.each(&:draw)
+      @features.each{ |f| f.draw }
     end
 
   end
@@ -38,15 +43,16 @@ module ChernoffFaces
   # TODO: color? line thickness?
   #
   class Feature
-    def initialize(svg_image, *values)
+    attr_accessor :svg, :values
+    def initialize(svg, *values)
+      @svg = svg
       @values = values
-      @svg = svg_image
     end
 
     ##
     # Draw the feature
     #
-    def draw(*values)
+    def draw
 
     end
   end
@@ -54,9 +60,21 @@ module ChernoffFaces
   ##
   # smaller <-> larger
   #
-  class Eyes < Feature
-    def draw(*values)
+  class Nose < Feature
+    def draw
+      @svg.line(50, 35, 50, @values.first)
+      @svg.circle(40, @values.first, 50, @values.first)
+      super
+    end
+  end
 
+  ##
+  # smaller <-> larger
+  #
+  class Eyes < Feature
+    def draw
+      @svg.circle(25, 25, @values.first)
+      @svg.circle(25, 75, @values.first)
       super
     end
   end
@@ -65,7 +83,8 @@ module ChernoffFaces
   # frown <-> smile
   #
   class Mouth < Feature
-    def draw(*values)
+    def draw
+
       super
     end
   end
@@ -74,7 +93,7 @@ module ChernoffFaces
   # smaller <-> larger
   #
   class Ears < Feature
-    def draw(*values)
+    def draw
       super
     end
   end
@@ -83,7 +102,7 @@ module ChernoffFaces
   # oval <-> round
   #
   class HeadShape < Feature
-    def draw(*values)
+    def draw
       super
     end
   end
