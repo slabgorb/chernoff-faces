@@ -37,13 +37,14 @@ module ChernoffFaces
     before :each do
       @face = Face.new({ eyes: 3, nose: 10, mouth: 5, ears: 10 })
       @face.draw
+      @doc = Nokogiri::XML(@face.output)
     end
 
     it 'draws noses' do
-      @face.output.should match(/line x1="60" y1="40" x2="50" y2="40" style="stroke:black;"/)
+      @doc.children.children.last.attributes.values.map(&:value).should eq ["60", "40", "50", "40", "stroke:black;"]
     end
     it 'draws eyes' do
-      @face.output.should match(/cx="30" cy="20" r="3"/)
+      @doc.children.children[1].attributes.values.map(&:value).should eq ["30", "20", "3", "stroke:black;"]
     end
 
   end
