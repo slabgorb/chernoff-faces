@@ -1,6 +1,6 @@
 = chernoff-faces
 
-Description goes here.
+Library for creating SVG-based Chernoff Face Plots.
 
 == Contributing to chernoff-faces
  
