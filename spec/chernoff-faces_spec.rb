@@ -17,9 +17,14 @@ module ChernoffFaces
 
     it 'saves face' do
       path = 'tmp/test.svg'
-
       @face.draw.save(path)
       File.exists?(path).should be_true
+    end
+
+    context 'edge cases' do
+      it 'handles extreme cases' do
+        ugly = Face.new({ eyes: 0, nose: 0, mouth: 0, ears: 0})
+      end
     end
 
     it 'outputs svg directly' do
@@ -41,7 +46,7 @@ module ChernoffFaces
     end
 
     it 'draws noses' do
-      @doc.children.children.last.attributes.values.map(&:value).should eq ["60", "40", "50", "40", "stroke:black;"]
+      @doc.children.children[5].attributes.values.map(&:value).should eq ["60", "40", "50", "40", "stroke:black;"]
     end
     it 'draws eyes' do
       @doc.children.children[1].attributes.values.map(&:value).should eq ["30", "20", "3", "stroke:black;"]

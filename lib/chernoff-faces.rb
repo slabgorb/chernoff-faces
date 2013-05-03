@@ -22,6 +22,7 @@ module ChernoffFaces
       keyvalues.each do |key, values|
         @features[key] = constantize(key).new(@svg, *values)
       end
+      draw
     end
 
     ##
@@ -125,7 +126,9 @@ module ChernoffFaces
   #
   class Mouth < Feature
     def draw
-
+      spot = 60
+      center = 50
+      @svg.polyline(center - @values.first, spot + @values.first, center, spot, center + @values.first, spot + @values.first )
       super
     end
   end
