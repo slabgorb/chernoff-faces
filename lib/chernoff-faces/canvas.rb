@@ -1,10 +1,7 @@
 module ChernoffFaces
   class Canvas
-    def initialize(width = 1000, height = 1000)
-      @doc = skeleton
-      @parent = @doc.at_css "svg"
-      @parent['width'] = width
-      @parent['height'] = height
+    def initialize(width = 100, height = 100)
+      reset(width, height)
     end
 
     def width
@@ -15,8 +12,11 @@ module ChernoffFaces
       @parent['height'].to_i
     end
 
-    def reset
+    def reset(width = @parent['width'], height = @parent['height'])
       @doc = skeleton
+      @parent = @doc.at_css "svg"
+      @parent['width'] = width
+      @parent['height'] = height
     end
 
     def skeleton
