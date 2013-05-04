@@ -8,10 +8,10 @@ module ChernoffFaces
     attr_reader :features
 
     def initialize(width = 100, height = 100, filepath = 'tmp/outfile.svg', keyvalues)
-      @svg = Canvas.new(width, height)
+      @canvas = Canvas.new(width, height)
       @features = { }
       keyvalues.each do |key, values|
-        @features[key] = constantize(key).new(@svg, *values)
+        @features[key] = constantize(key).new(@canvas, *values)
       end
       draw
     end
@@ -21,7 +21,7 @@ module ChernoffFaces
     #
     def save(filename)
       begin
-        File.open(File.expand_path(filename), 'w') { |f| f << @svg.to_s }
+        File.open(File.expand_path(filename), 'w') { |f| f << @canvas.to_s }
       rescue Exception => e
         puts e.message
         return false
@@ -33,7 +33,7 @@ module ChernoffFaces
     # Set or override one of the facial features
     #
     def []=(key, *values)
-      @features[key] = constantize(key).new(@svg, *values)
+      @features[key] = constantize(key).new(@canvas, *values)
     end
 
     def draw
@@ -42,7 +42,7 @@ module ChernoffFaces
     end
 
     def to_s
-      @svg.to_s
+      @canvas.to_s
     end
 
 
