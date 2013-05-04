@@ -16,6 +16,14 @@ module ChernoffFaces
       @parent['height'] = height
     end
 
+    def width
+      @parent['width'].to_i
+    end
+
+    def height
+      @parent['height'].to_i
+    end
+
     def self.default_style(element_type = :default)
       case element_type.to_sym
         when :line then { fill:'white', stroke:'black' }
@@ -110,7 +118,7 @@ module ChernoffFaces
     attr_accessor :svg, :values
     def initialize(svg, *values)
       @svg = svg
-      @values = values
+      @values = values.map{ |m| m * (@svg.width / 100)}
     end
 
     ##
@@ -133,8 +141,8 @@ module ChernoffFaces
   #
   class Nose < Feature
     def draw
-      center = 50
-      top = 10
+      center = (@svg.width / 2)
+      top = (@svg.height / 10)
       bottom = top + (first_value * 4)
       line_length = first_value
       # eyebrow
@@ -153,8 +161,8 @@ module ChernoffFaces
   class Eyes < Feature
     def draw
       attributes = { style: "stroke: black; stroke-width: 1; fill: rgba(1,1,1,0)", cy: 20, r: first_value * 1.5}
-      @svg.circle(attributes.merge({cx: 30}))
-      @svg.circle(attributes.merge({cx: 70}))
+      @svg.circle(attributes.merge({cx:(@svg.height * 0.30)}))
+      @svg.circle(attributes.merge({cx:(@svg.height * 0.70)}))
       super
     end
   end
@@ -164,8 +172,8 @@ module ChernoffFaces
   #
   class Mouth < Feature
     def draw
-      spot = 60
-      center = 50
+      spot = (@svg.height * 0.60)
+      center = (@svg.width * 0.50)
       value = first_value * 3
       @svg.path(fill: 'white',
                 stroke: 'black',
@@ -179,9 +187,9 @@ module ChernoffFaces
   #
   class Ears < Feature
     def draw
-      y = 40
-      x1 = 25
-      x2 = 75
+      y = (@svg.height * 0.40)
+      x1 = (@svg.width * 0.25)
+      x2 = (@svg.width * 0.75)
       radius = (first_value * 0.5)
       attributes = { style: "stroke: black; stroke-width: 10; fill: rgba(1,1,1,0)"}
       @svg.circle( attributes.merge( { cx: x1, cy: y } ) )
@@ -195,10 +203,10 @@ module ChernoffFaces
   #
   class Head < Feature
     def draw
-      @svg.ellipse( cx: 50,
-                    cy: 50,
-                    r1: 50,
-                    r2: 50 - first_value,
+      @svg.ellipse( cx: (@svg.height * 0.50),
+                    cy: (@svg.height * 0.50),
+                    r1: (@svg.height * 0.50),
+                    r2: (@svg.height * 0.50) - first_value,
                     style: "stroke: black; stroke-width: 10; fill: rgba(1,1,1,0)" )
       super
     end

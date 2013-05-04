@@ -50,6 +50,11 @@ module ChernoffFaces
       @face.draw.save(path)
       File.exists?(path).should be_true
     end
+    it 'scales' do
+      path = 'tmp/scale.svg'
+      Face.new(500, 500, eyes: 3, nose: 10, mouth: 5, ears: 10 ).draw.save path
+      File.exists?(path).should be_true
+    end
 
     context 'edge cases' do
       it 'handles extreme cases' do
@@ -62,7 +67,7 @@ module ChernoffFaces
 
     it 'outputs svg directly' do
       doc = Nokogiri::parse(@face.to_s)
-      doc.children.children[1].attributes.values.map(&:value).should eq ["black", "black", "stroke: black; stroke-width: 1; fill: rgba(1,1,1,0)", "20", "4.5", "30"]
+      doc.children.children[1].attributes.values.map(&:value).should eq ["black", "black", "stroke: black; stroke-width: 1; fill: rgba(1,1,1,0)", "20", "4.5", "30.0"]
     end
 
     after :all do
@@ -83,7 +88,7 @@ module ChernoffFaces
       @doc.children.children[5].attributes.values.map(&:value).should eq ["white", "black", "40", "10", "55", "10"]
     end
     it 'draws eyes' do
-      @doc.children.children[1].attributes.values.map(&:value).should eq ["black", "black", "stroke: black; stroke-width: 1; fill: rgba(1,1,1,0)", "20", "4.5", "30"]
+      @doc.children.children[1].attributes.values.map(&:value).should eq ["black", "black", "stroke: black; stroke-width: 1; fill: rgba(1,1,1,0)", "20", "4.5", "30.0"]
     end
 
   end
