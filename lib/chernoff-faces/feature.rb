@@ -36,12 +36,14 @@ module ChernoffFaces
       top = (@window.height / 10)
       bottom = top + (first_value * 4)
       line_length = first_value
-      # eyebrow
-      @window.line(x1: center - line_length, y1: top, x2: center + 5, y2: top)
-      # nose height
-      @window.line(x1: center + 5, y1: top, x2: center, y2: bottom)
-      # nose bottom
-      @window.line(x1: center + line_length, y1: bottom, x2: center, y2: bottom)
+      @window.g do
+        # eyebrow
+        line(x1: center - line_length, y1: top, x2: center + 5, y2: top)
+        # nose height
+        line(x1: center + 5, y1: top, x2: center, y2: bottom)
+        # nose bottom
+        line(x1: center + line_length, y1: bottom, x2: center, y2: bottom)
+      end
       super
     end
   end
@@ -51,9 +53,13 @@ module ChernoffFaces
   #
   class Eyes < Feature
     def draw
-      @window.g do
-        ellipse( ry: "16.5", rx: "30.5", cy:"188", cx:"194.5", 'stroke-width' => "2", stroke:"#000000", fill:"none")
-        ellipse( ry:"15", rx:"16", cy:"188", cx:"194", 'stroke-width' => "2", stroke:"#000000", fill:"none")
+      @window.g(transform: "translate(#{window.width * 0.15}, #{window.width * 0.35}) scale(0.#{first_value}, 0.#{first_value})") do
+        ellipse( ry: "16.5", rx: "30.5", cy:"10", cx:"10", 'stroke-width' => "1", stroke:"#000000", fill:"none")
+        ellipse( ry:"15", rx:"16", cy:"10.5", cx:"10", 'stroke-width' => "1", stroke:"#000000", fill:"none")
+      end
+      @window.g(transform: "translate(#{@window.width * 0.45}, 0) scale(0.#{first_value}, 0.#{first_value})") do
+        ellipse( ry: "16.5", rx: "30.5", cy:"188", cx:"194.5", 'stroke-width' => "1", stroke:"#000000", fill:"none")
+        ellipse( ry:"15", rx:"16", cy:"188", cx:"194", 'stroke-width' => "1", stroke:"#000000", fill:"none")
       end
       super
     end
@@ -66,10 +72,12 @@ module ChernoffFaces
     def draw
       spot = (@window.height * 0.60)
       center = (@window.width * 0.50)
-      value = first_value * 3
-      @window.path(fill: 'white',
-                stroke: 'black',
-                d:"M#{center - value},#{spot} C#{center - value},#{spot + value} #{center + value}, #{spot + value / 2} #{center + value}, #{spot} Z")
+      width = (@window.width * 0.35)
+      @window.g(transform: "scale(0.#{first_value}, 1)") do
+        path(fill: 'white',
+             stroke: 'black',
+             d:"M#{center - width},#{spot} C#{center - width},#{spot + width} #{center + width}, #{spot + width / 2} #{center + width}, #{spot} Z")
+      end
       super
     end
   end
