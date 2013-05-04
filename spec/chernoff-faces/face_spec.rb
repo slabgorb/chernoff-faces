@@ -23,6 +23,7 @@ describe Face do
 
   context 'edge cases' do
     it 'handles extreme cases' do
+      @canvas.reset
       ugly_small = Face.new(@canvas, 'tmp/ugly_small.svg', eyes: 1, nose: 1, mouth: 1, ears: 1, head: 1)
       ugly_small.save.should be_true
       ugly_big = Face.new(@canvas, 'tmp/ugly_big.svg', eyes: 10, nose: 10, mouth: 10, ears: 10)
@@ -32,11 +33,7 @@ describe Face do
 
   it 'outputs svg directly' do
     doc = Nokogiri::parse(@face.to_s)
-    doc.slop!.children.children.map(&:name).should eq ["text", "g", "text",
-                                                       "line", "text", "line",
-                                                       "text", "line", "text",
-                                                       "path", "text", "circle",
-                                                       "text", "circle", "text"]
+    fun_elements(doc).should eq ["circle", "circle"]
   end
 
   after :all do

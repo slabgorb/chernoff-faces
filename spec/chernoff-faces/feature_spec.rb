@@ -11,20 +11,7 @@ module ChernoffFaces
     end
 
     it 'draws features' do
-      @doc.slop!.children.children.map(&:name).should eq ["text", "g", "text",
-                                                          "line", "text",
-                                                          "line", "text",
-                                                          "line", "text",
-                                                          "path", "text",
-                                                          "circle", "text",
-                                                          "circle", "text",
-                                                          "ellipse", "text", "g",
-                                                          "text", "line", "text",
-                                                          "line", "text", "line",
-                                                          "text", "path", "text",
-                                                          "circle", "text",
-                                                          "circle", "text",
-                                                          "ellipse", "text"]
+      fun_elements(@doc).should eq ["circle", "circle", "ellipse", "circle", "circle", "ellipse"]
     end
   end
 
