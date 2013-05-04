@@ -7,11 +7,12 @@ module ChernoffFaces
   class Face
     attr_reader :features
 
-    def initialize(width = 100, height = 100, filepath = 'tmp/outfile.svg', keyvalues)
-      @canvas = Canvas.new(width, height)
-      @features = { }
+    def initialize( window, filepath = 'tmp/outfile.svg', keyvalues)
+      @window = window
+      @filepath = filepath
+      @features = {}
       keyvalues.each do |key, values|
-        @features[key] = constantize(key).new(@canvas, *values)
+        @features[key] = constantize(key).new(@window, *values)
       end
       draw
     end
@@ -19,9 +20,9 @@ module ChernoffFaces
     ##
     # Saves the image to file
     #
-    def save(filename)
+    def save(filename = @filepath)
       begin
-        File.open(File.expand_path(filename), 'w') { |f| f << @canvas.to_s }
+        File.open(File.expand_path(filename), 'w') { |f| f << @window.to_s }
       rescue Exception => e
         puts e.message
         return false
@@ -33,7 +34,7 @@ module ChernoffFaces
     # Set or override one of the facial features
     #
     def []=(key, *values)
-      @features[key] = constantize(key).new(@canvas, *values)
+      @features[key] = constantize(key).new(@window, *values)
     end
 
     def draw
@@ -42,7 +43,7 @@ module ChernoffFaces
     end
 
     def to_s
-      @canvas.to_s
+      @window.to_s
     end
 
 

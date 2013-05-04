@@ -33,9 +33,9 @@ module ChernoffFaces
 
 
   describe Face do
-
     before :each do
-      @face = Face.new({ eyes: 3, nose: 10, mouth: 5, ears: 10 })
+      @canvas = Canvas.new
+      @face = Face.new(@canvas, { eyes: 3, nose: 10, mouth: 5, ears: 10 })
     end
 
     it 'creates features' do
@@ -50,24 +50,24 @@ module ChernoffFaces
       @face.draw.save(path)
       File.exists?(path).should be_true
     end
-    it 'scales' do
-      path = 'tmp/scale.svg'
-      Face.new(500, 500, eyes: 3, nose: 10, mouth: 5, ears: 10 ).draw.save path
-      File.exists?(path).should be_true
-    end
+
 
     context 'edge cases' do
       it 'handles extreme cases' do
-        ugly_small = Face.new({ eyes: 1, nose: 1, mouth: 1, ears: 1, head: 1})
-        ugly_small.save('tmp/ugly_small.svg').should be_true
-        ugly_big = Face.new({ eyes: 10, nose: 10, mouth: 10, ears: 10})
-        ugly_big.save('tmp/ugly_big.svg').should be_true
+        ugly_small = Face.new(@canvas, 'tmp/ugly_small.svg', eyes: 1, nose: 1, mouth: 1, ears: 1, head: 1)
+        ugly_small.save.should be_true
+        ugly_big = Face.new(@canvas, 'tmp/ugly_big.svg', eyes: 10, nose: 10, mouth: 10, ears: 10)
+        ugly_big.save.should be_true
       end
     end
 
     it 'outputs svg directly' do
       doc = Nokogiri::parse(@face.to_s)
-      doc.children.children[1].attributes.values.map(&:value).should eq ["black", "black", "stroke: black; stroke-width: 1; fill: rgba(1,1,1,0)", "20", "4.5", "30.0"]
+      doc.slop!.children.children.map(&:name).should eq ["text", "g", "text",
+                                                         "line", "text", "line",
+                                                         "text", "line", "text",
+                                                         "path", "text", "circle",
+                                                         "text", "circle", "text"]
     end
 
     after :all do
@@ -79,17 +79,27 @@ module ChernoffFaces
   describe Feature do
 
     before :each do
-      @face = Face.new({ eyes: 3, nose: 10, mouth: 5, ears: 10, head: 5 })
+      @canvas = Canvas.new
+      @face = Face.new(@canvas,  eyes: 3, nose: 10, mouth: 5, ears: 10, head: 5 )
       @face.draw
-      @doc = Nokogiri::XML(@face.to_s)
+      @doc = Nokogiri::XML(@face.to_s).slop!
     end
 
-    it 'draws noses' do
-      @doc.children.children[5].attributes.values.map(&:value).should eq ["white", "black", "40", "10", "55", "10"]
+    it 'draws features' do
+      @doc.slop!.children.children.map(&:name).should eq ["text", "g", "text",
+                                                          "line", "text",
+                                                          "line", "text",
+                                                          "line", "text",
+                                                          "path", "text",
+                                                          "circle", "text",
+                                                          "circle", "text",
+                                                          "ellipse", "text", "g",
+                                                          "text", "line", "text",
+                                                          "line", "text", "line",
+                                                          "text", "path", "text",
+                                                          "circle", "text",
+                                                          "circle", "text",
+                                                          "ellipse", "text"]
     end
-    it 'draws eyes' do
-      @doc.children.children[1].attributes.values.map(&:value).should eq ["black", "black", "stroke: black; stroke-width: 1; fill: rgba(1,1,1,0)", "20", "4.5", "30.0"]
-    end
-
   end
 end
